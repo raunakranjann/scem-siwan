@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siwan College of Engineering & Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+
+    <main class="flex flex-col md:flex-row max-w-3xl mx-auto rounded-xl shadow-xl overflow-hidden bg-white">
+        <div class="relative w-full md:w-2/5 p-8 md:p-12 text-white flex flex-col justify-between bg-gradient-to-r from-blue-600 to-indigo-700">
+            <div class="flex items-center space-x-2 mb-8 md:mb-0">
+
+                    <div class="flex justify-center md:justify-start mb-4 bg-white rounded-full p-2">
+                        <img src="{{ url_for('static', filename='public/Clg logo.png') }}" alt="College Logo" class="h-16 w-16">
+                    </div>
+                
+                
+            </div>
+
+            <div class="my-auto text-center md:text-left">
+                <h2 class="text-4xl font-bold mb-4"></h2>
+                <p class="text-lg opacity-90">Welcome !<br>"Your Engagement Journey Begins Here"</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mt-8 md:mt-0">
+                <a href="#" class="inline-block">
+                    <img src="https://placehold.co/150x50/ffffff/000000?text=GET+IT+ON+%0A+Google+Play" alt="Google Play" class="rounded-lg">
+                </a>
+                <a href="#" class="inline-block">
+                    <img src="https://placehold.co/150x50/ffffff/000000?text=Download+on+the+%0A+App+Store" alt="App Store" class="rounded-lg">
+                </a>
+            </div>
+
+            <div class="flex justify-center md:justify-start space-x-4 text-sm mt-8">
+                <a href="#" class="hover:underline">Contact Us</a>
+                <a href="#" class="hover:underline">Privacy Policy</a>
+                <a href="#" class="hover:underline">Refund Policy</a>
+            </div>
+        </div>
+
+        <div class="w-full md:w-3/5 p-8 md:p-16 flex flex-col justify-center">
+            <div class="text-center md:text-left">
+                
+                <h1 class="text-1xl font-bold text-gray-800 text-center">SIWAN COLLEGE OF ENGINEERING & MANAGEMENT</h1>
+                <p class="text-gray-500 mt-2">Enter your username and password to access your account</p>
+            </div>
+
+            <form action="{{ url_for('login') }}" method="POST" class="mt-8 space-y-6">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter Username" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter Password" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="from_year" class="block text-sm font-medium text-gray-700">Session From Year</label>
+                        <select id="from_year" name="from_year"
+                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Select Year</option> {# Optional empty option #}
+                            {% set current_year = (current_date.year if current_date else 2025) %}
+                            {% for year in range(current_year - 10, current_year + 5) %}
+                                <option value="{{ year }}" {% if selected_from_year and selected_from_year == year|string %}selected{% endif %}>{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="to_year" class="block text-sm font-medium text-gray-700">Session To Year</label>
+                        <select id="to_year" name="to_year"
+                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Select Year</option> {# Optional empty option #}
+                            {% set current_year = (current_date.year if current_date else 2025) %}
+                            {% for year in range(current_year - 9, current_year + 6) %} {# +1 from from_year range #}
+                                <option value="{{ year }}" {% if selected_to_year and selected_to_year == year|string %}selected{% endif %}>{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <a href="{{ url_for('otp_login') }}" class="text-blue-600 hover:underline font-bold">Login With OTP</a>
+                    <a href="{{ url_for('forgot_password') }}" class="text-blue-600 hover:underline">Forgot Password?</a>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-2">
+                        <label for="captcha" class="text-sm text-gray-700">Please solve this Captcha:</label>
+                        <span class="font-bold text-lg">{{ captcha_text }} =</span>
+                        <input type="text" id="captcha" name="captcha" placeholder="?" required
+                               class="w-20 px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="flex items-center">
+                        <input id="agreement" name="agreement" type="checkbox" required
+                               class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                        <label for="agreement" class="ml-2 block text-sm text-gray-900">End-User License Agreement</label>
+                    </div>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="space-y-2">
+                        {% for category, message in messages %}
+                            {% if category == 'error' %}
+                                <p class="text-red-500 text-sm">{{ message }}</p>
+                            {% elif category == 'success' %}
+                                <p class="text-green-500 text-sm">{{ message }}</p>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <div>
+                    <button type="submit"
+                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Login
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-4 text-center">
+                <a href="{{ url_for('register') }}" class="text-blue-600 hover:underline">Don't have an account? Register here</a>
+            </div>
+
+            <p class="mt-8 text-center text-sm text-gray-500">Helpline No.: 7250122882</p>
+        </div>
+    </main>
+</body>
+</html>

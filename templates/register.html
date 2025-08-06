@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siwan College of Engineering & Management - Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+    <main class="w-full max-w-2xl mx-auto p-8 rounded-xl shadow-xl overflow-hidden bg-white">
+        <div class="flex flex-col justify-center">
+            <div class="text-center">
+                <div class="flex justify-center mb-4">
+                    <img src="{{ url_for('static', filename='public/Clg logo.png') }}" alt="College Logo" class="h-20 w-20">
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">SIWAN COLLEGE OF ENGINEERING & MANAGEMENT</h1>
+                <p class="text-gray-500 mt-2">Create a new account to register</p>
+            </div>
+
+            <form action="{{ url_for('register') }}" method="POST" class="mt-8 space-y-6">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Choose a username" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                    <div id="username_status" class="text-sm mt-1"></div> {# Placeholder for username status #}
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Choose a password" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <h2 class="text-lg font-bold text-gray-800 pt-4">Student Information</h2>
+                <hr class="border-gray-300">
+
+                <div>
+                    <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                    <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="father_name" class="block text-sm font-medium text-gray-700">Father's Name</label>
+                    <input type="text" id="father_name" name="father_name" placeholder="Enter your father's name" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="registration_number" class="block text-sm font-medium text-gray-700">Registration Number</label>
+                    <input type="text" id="registration_number" name="registration_number" placeholder="Enter your registration number" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="roll_number" class="block text-sm font-medium text-gray-700">Roll Number</label>
+                    <input type="text" id="roll_number" name="roll_number" placeholder="Enter your college roll number" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="mobile_number" class="block text-sm font-medium text-gray-700">Mobile Number</label>
+                    <input type="text" id="mobile_number" name="mobile_number" placeholder="Enter your mobile number" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="from_year" class="block text-sm font-medium text-gray-700">Session From Year</label>
+                        <select id="from_year" name="from_year" required
+                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            {% set current_year = (current_date.year if current_date else 2025) %}
+                            {% for year in range(current_year - 10, current_year + 5) %}
+                                <option value="{{ year }}" {% if selected_from_year and selected_from_year == year|string %}selected{% elif not selected_from_year and year == current_year %}selected{% endif %}>{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label for="to_year" class="block text-sm font-medium text-gray-700">Session To Year</label>
+                        <select id="to_year" name="to_year" required
+                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            {% set current_year = (current_date.year if current_date else 2025) %}
+                            {% for year in range(current_year - 9, current_year + 6) %} {# +1 from from_year range #}
+                                <option value="{{ year }}" {% if selected_to_year and selected_to_year == year|string %}selected{% elif not selected_to_year and year == current_year + 4 %}selected{% endif %}>{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+                    <textarea id="address" name="address" rows="3" placeholder="Enter your address" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="space-y-2">
+                        {% for category, message in messages %}
+                            {% if category == 'error' %}
+                                <p class="text-red-500 text-sm">{{ message }}</p>
+                            {% elif category == 'success' %}
+                                <p class="text-green-500 text-sm">{{ message }}</p>
+                            {% endif %}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <div>
+                    <button type="submit" id="register_button"
+                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Register
+                    </button>
+                </div>
+            </form>
+
+            <div class="mt-4 text-center">
+                <a href="{{ url_for('login') }}" class="text-blue-600 hover:underline">Already have an account? Login here</a>
+            </div>
+
+            <p class="mt-8 text-center text-sm text-gray-500">Helpline No.: 7250122882</p>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const usernameInput = document.getElementById('username');
+            const usernameStatusDiv = document.getElementById('username_status');
+            const registerButton = document.getElementById('register_button');
+
+            let timeout = null; // To debounce the input
+
+            usernameInput.addEventListener('keyup', function() {
+                clearTimeout(timeout);
+                const username = usernameInput.value;
+
+                if (username.length < 3) { // Minimum length for check
+                    usernameStatusDiv.textContent = '';
+                    registerButton.disabled = false; // Enable button if not checking
+                    return;
+                }
+
+                usernameStatusDiv.textContent = 'Checking availability...';
+                usernameStatusDiv.className = 'text-sm mt-1 text-gray-500';
+                registerButton.disabled = true; // Disable button while checking
+
+                timeout = setTimeout(function() {
+                    fetch('/check_username', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username: username })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            usernameStatusDiv.textContent = 'Username already exists. Please choose another.';
+                            usernameStatusDiv.className = 'text-sm mt-1 text-red-600';
+                            registerButton.disabled = true; // Keep button disabled
+                        } else {
+                            usernameStatusDiv.textContent = 'Username available.';
+                            usernameStatusDiv.className = 'text-sm mt-1 text-green-600';
+                            registerButton.disabled = false; // Enable button
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        usernameStatusDiv.textContent = 'Error checking username. Please try again.';
+                        usernameStatusDiv.className = 'text-sm mt-1 text-red-600';
+                        registerButton.disabled = false; // Re-enable on error, or keep disabled based on policy
+                    });
+                }, 500); // Debounce time: wait 500ms after last key press
+            });
+
+            // Also check on blur, in case user pastes username
+            usernameInput.addEventListener('blur', function() {
+                clearTimeout(timeout); // Clear any pending keyup checks
+                const username = usernameInput.value;
+
+                if (username.length < 3) { // Minimum length for check
+                    usernameStatusDiv.textContent = '';
+                    registerButton.disabled = false;
+                    return;
+                }
+
+                usernameStatusDiv.textContent = 'Checking availability...';
+                usernameStatusDiv.className = 'text-sm mt-1 text-gray-500';
+                registerButton.disabled = true;
+
+                fetch('/check_username', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username: username })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        usernameStatusDiv.textContent = 'Username already exists. Please choose another.';
+                        usernameStatusDiv.className = 'text-sm mt-1 text-red-600';
+                        registerButton.disabled = true;
+                    } else {
+                        usernameStatusDiv.textContent = 'Username available.';
+                        usernameStatusDiv.className = 'text-sm mt-1 text-green-600';
+                        registerButton.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    usernameStatusDiv.textContent = 'Error checking username. Please try again.';
+                    usernameStatusDiv.className = 'text-sm mt-1 text-red-600';
+                    registerButton.disabled = false;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
